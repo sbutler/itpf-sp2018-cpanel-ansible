@@ -1,0 +1,13 @@
+---
+- hosts: itpfansibledev.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage1
+- hosts: itpfansibletest.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage1
+- hosts: itpfansibleprod.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage1
