@@ -1,0 +1,15 @@
+- name: mysql | list database users
+  cpanel_api:
+      version: cpapi2
+      module: MysqlFE
+      function: listusers
+  register: dbusers_list
+  changed_when: False
+  check_mode: False
+- name: mysql | delete database user
+  cpanel_api:
+      module: Mysql
+      function: delete_user
+      args:
+          name: '{{ myapp_dbuser_name }}'
+  when: myapp_dbuser_name in dbusers_list.data|json_query('[].user')

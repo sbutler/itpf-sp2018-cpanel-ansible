@@ -1,0 +1,43 @@
+- name: include stage1
+  include_tasks: ../../myapp_stage1/tasks/main.yml
+
+- name: mysql | list database users
+  cpanel_api:
+      version: cpapi2
+      module: MysqlFE
+      function: listusers
+  register: dbusers_list
+  changed_when: false
+  check_mode: false
+- name: mysql | create database user
+  cpanel_api:
+      module: Mysql
+      function: create_user
+      args:
+          name: '{{ myapp_dbuser_name }}'
+          password: '{{ myapp_dbuser_pass }}'
+  register: myapp_dbuser_result
+  when: myapp_dbuser_name not in dbusers_list.data|json_query('[].user')
+
+- name: mysql | list database user privileges
+  cpanel_api:
+      version: uapi
+      module: Mysql
+      function: get_privileges_on_database
+      args:
+          user: "{{ myapp_dbuser_name }}"
+          database: "{{ myapp_db_name }}"
+  register: dbprivs_list
+  changed_when: false
+  check_mode: false
+  when: myapp_dbuser_result is changed or myapp_dbuser_name in dbusers_list.data|json_query('[].user')
+- name: mysql | grant myapp database privileges
+  cpanel_api:
+      version: uapi
+      module: Mysql
+      function: set_privileges_on_database
+      args:
+          user: "{{ myapp_dbuser_name }}"
+          database: "{{ myapp_db_name }}"
+          privileges: '{{ myapp_dbprivs|join(",") }}'
+  when: dbprivs_list.data is defined and myapp_dbprivs|sort != dbprivs_list.data|sort

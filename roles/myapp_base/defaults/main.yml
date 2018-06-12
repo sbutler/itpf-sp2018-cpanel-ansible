@@ -1,2 +1,3 @@
 ---
 myapp_db_name: "{{ ansible_user }}_myapp"
+myapp_dbuser_name: "{{ ansible_user }}_myapp"

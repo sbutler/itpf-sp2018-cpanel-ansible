@@ -1,0 +1,16 @@
+---
+- hosts: itpfansibledev.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage2
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.dev }}"
+- hosts: itpfansibletest.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage2
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.test }}"
+- hosts: itpfansibleprod.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage2
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.prod }}"
