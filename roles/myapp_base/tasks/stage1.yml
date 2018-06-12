@@ -1,0 +1,17 @@
+- name: mysql | list databases
+  cpanel_api:
+      version: cpapi2
+      module: MysqlFE
+      function: listdbs
+  register: db_list
+  changed_when: false
+  check_mode: false
+- name: mysql | delete myapp database
+  cpanel_api:
+      version: uapi
+      module: Mysql
+      function: delete_database
+      args:
+          name: "{{ myapp_db_name }}"
+  register: api_result
+  when: myapp_db_name in db_list.data|json_query('[].db')

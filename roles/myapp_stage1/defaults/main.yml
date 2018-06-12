@@ -1,0 +1,2 @@
+---
+myapp_db_name: "{{ ansible_user }}_myapp"

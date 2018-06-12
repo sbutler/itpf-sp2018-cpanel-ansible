@@ -1,0 +1,2 @@
+- name: base for stage 1
+  include_tasks: stage1.yml
