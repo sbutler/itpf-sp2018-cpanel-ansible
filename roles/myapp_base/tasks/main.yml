@@ -1,3 +1,5 @@
+- name: base for stage 3
+  include_tasks: stage3.yml
 - name: base for stage 2
   include_tasks: stage2.yml
 - name: base for stage 1

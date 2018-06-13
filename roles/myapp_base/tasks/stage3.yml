@@ -1,0 +1,30 @@
+- name: domains | list domains
+  cpanel_api:
+      module: DomainInfo
+      function: list_domains
+  register: domain_list
+  changed_when: false
+  check_mode: false
+- name: domains | get domain for myapp
+  set_fact:
+      myapp_domain: "{{ domain_list.data.main_domain }}"
+  changed_when: false
+  check_mode: false
+
+- name: php | list vhost php versions
+  cpanel_api:
+      version: uapi
+      module: LangPHP
+      function: php_get_vhost_versions
+  register: phpvhost_list
+  changed_when: false
+  check_mode: false
+- name: php | set myapp php version
+  cpanel_api:
+      version: uapi
+      module: LangPHP
+      function: php_set_vhost_versions
+      args:
+          vhost: "{{ myapp_domain }}"
+          version: ea-php56
+  when: "'ea-php56' != (phpvhost_list.data|json_query('[?vhost==`'+myapp_domain+'`]|[0]')).version"

@@ -1,0 +1,19 @@
+---
+- hosts: itpfansibledev.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage3
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.dev }}"
+        myapp_phpver: ea-php72
+- hosts: itpfansibletest.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage3
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.test }}"
+        myapp_phpver: ea-php72
+- hosts: itpfansibleprod.web.illinois.edu
+  gather_facts: false
+  roles:
+      - role: myapp_stage3
+        myapp_dbuser_pass: "{{ vault_myapp_dbuser_pass.prod }}"
+        myapp_phpver: ea-php56
